@@ -166,26 +166,6 @@ docker run -p 8080:8080 \
 
 ---
 
-## 🐳 Docker Compose (Frontend + Backend)
-
-Din folderul rădăcină al proiectului:
-
-```bash
-# Creează fișierul .env cu keys
-echo "GNEWS_KEY=your_gnews_key" >> .env
-echo "UNSPLASH_KEY=your_unsplash_key" >> .env
-
-# Pornește ambele servicii
-docker-compose up --build
-```
-
-| Serviciu | URL |
-|---------|-----|
-| Frontend | http://localhost:3000 |
-| Backend | http://localhost:8080 |
-
----
-
 ## 🔗 Surse de date externe
 
 | API | Documentație | Plan gratuit |
