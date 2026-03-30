@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/country")
-@CrossOrigin(origins = "${cors.allowed.origins}")
 public class CountryController {
 
     private final CountryService countryService;
