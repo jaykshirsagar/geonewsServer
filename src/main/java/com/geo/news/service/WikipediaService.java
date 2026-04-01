@@ -71,7 +71,6 @@ public class WikipediaService {
                         "Can you tell me quick summary of this country history: " + countryCode, config);
 
         return ResponseEntity.ok(response.text());
-
     }
 
     private String getCountryName(String countryCode) {

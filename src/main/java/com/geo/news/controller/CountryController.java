@@ -4,20 +4,24 @@ import com.geo.news.model.CountryInfo;
 import com.geo.news.service.CountryService;
 import com.geo.news.service.NewsService;
 import com.geo.news.service.WikipediaService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/country")
 public class CountryController {
 
     private final CountryService countryService;
     private final NewsService newsService;
     private final WikipediaService wikipediaService;
+
+    public CountryController(CountryService countryService, NewsService newsService, WikipediaService wikipediaService) {
+        this.countryService = countryService;
+        this.newsService = newsService;
+        this.wikipediaService = wikipediaService;
+    }
 
     @GetMapping("/{code}")
     public ResponseEntity<CountryInfo> getCountryInfo(@PathVariable String code) {
