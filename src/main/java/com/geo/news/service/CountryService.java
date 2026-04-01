@@ -1,5 +1,6 @@
 package com.geo.news.service;
 
+import com.geo.news.exception.HttpRequestErrorHandler;
 import com.geo.news.model.CountryInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -34,12 +35,12 @@ public class CountryService {
             JsonNode root = objectMapper.readTree(response).get(0);
 
             // Nume
-            info.setName(root.path("name").path("common").asText("—"));
+            info.setName(root.path("name").path("common").asString("—"));
 
             // Capitală
             JsonNode capitals = root.path("capital");
             info.setCapital(capitals.isArray() && capitals.size() > 0
-                    ? capitals.get(0).asText("—") : "—");
+                    ? capitals.get(0).asString("—") : "—");
 
             // Populație
             long pop = root.path("population").asLong(0);
@@ -51,7 +52,7 @@ public class CountryService {
             if (languages.isObject()) {
                 var iterator = languages.properties();
                 if (iterator.iterator().hasNext()) {
-                    language = iterator.iterator().next().getValue().asText("—");
+                    language = iterator.iterator().next().getValue().asString("—");
                 }
             }
             info.setLanguage(language);
@@ -63,8 +64,8 @@ public class CountryService {
                 var iterator = currencies.properties();
                 if (iterator.iterator().hasNext()) {
                     JsonNode currencyNode = iterator.iterator().next().getValue();
-                    currency = currencyNode.path("name").asText("—")
-                            + " (" + currencyNode.path("symbol").asText("?") + ")";
+                    currency = currencyNode.path("name").asString("—")
+                            + " (" + currencyNode.path("symbol").asString("?") + ")";
                 }
             }
             info.setCurrency(currency);
@@ -72,24 +73,17 @@ public class CountryService {
             // Continent
             JsonNode continents = root.path("continents");
             info.setContinent(continents.isArray() && continents.size() > 0
-                    ? continents.get(0).asText("—") : "—");
+                    ? continents.get(0).asString("—") : "—");
 
             // Suprafață
             double area = root.path("area").asDouble(0);
             info.setArea(String.format("%,.0f km²", area));
 
             // Steag
-            info.setFlagUrl(root.path("flags").path("png").asText(""));
+            info.setFlagUrl(root.path("flags").path("png").asString(""));
 
         } catch (Exception e) {
-            info.setName("—");
-            info.setCapital("—");
-            info.setPopulation("—");
-            info.setLanguage("—");
-            info.setCurrency("—");
-            info.setContinent("—");
-            info.setArea("—");
-            info.setFlagUrl("");
+            throw HttpRequestErrorHandler.toResponseStatus("RestCountries", e);
         }
 
         String countryName = info.getName();

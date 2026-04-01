@@ -1,5 +1,6 @@
 package com.geo.news.service;
 
+import com.geo.news.exception.HttpRequestErrorHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -46,14 +47,14 @@ public class UnsplashService {
             JsonNode results = root.path("results");
 
             for (JsonNode photo : results) {
-                String imageUrl = photo.path("urls").path("regular").asText("");
+                String imageUrl = photo.path("urls").path("regular").asString("");
                 if (!imageUrl.isEmpty()) {
                     photos.add(imageUrl);
                 }
             }
 
         } catch (Exception e) {
-            System.out.println("Unsplash Error: " + e.getMessage());
+            throw HttpRequestErrorHandler.toResponseStatus("Unsplash", e);
         }
 
         return photos;

@@ -1,5 +1,6 @@
 package com.geo.news.service;
 
+import com.geo.news.exception.HttpRequestErrorHandler;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -33,11 +34,10 @@ public class WikipediaService {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
             JsonNode root = objectMapper.readTree(response.getBody());
-            return root.path("extract").asText("Nu s-a găsit rezumat.");
+            return root.path("extract").asString("Nu s-a găsit rezumat.");
 
         } catch (Exception e) {
-            System.out.println("Wikipedia Error: " + e.getMessage());
-            return "Informațiile istorice nu sunt disponibile momentan.";
+            throw HttpRequestErrorHandler.toResponseStatus("Wikipedia", e);
         }
     }
 
